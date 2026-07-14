@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "title": "Like We're Nineteen",
+    "file": "audio/1.m4a",
+    "duration": "4:34"
+  },
+  {
+    "id": 2,
+    "title": "Jealousy",
+    "file": "audio/2.m4a",
+    "duration": "3:32"
+  },
+  {
+    "id": 3,
+    "title": "As My Final Act of Love",
+    "file": "audio/3.m4a",
+    "duration": "3:26"
+  }
+]
