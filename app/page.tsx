@@ -1,5 +1,4 @@
 import Player from "@/components/Player";
-import InstallPrompt from "@/components/InstallPrompt";
 import { album, tracks } from "@/lib/tracks";
 
 export default function HomePage() {
@@ -11,7 +10,6 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-void">
       <Player album={album} tracks={tracks} razorpayKeyId={razorpayKeyId} />
-      <InstallPrompt />
     </main>
   );
 }

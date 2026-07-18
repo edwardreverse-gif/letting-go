@@ -7,7 +7,7 @@ import VinylDisc from "@/components/VinylDisc";
 import TrackList from "@/components/TrackList";
 import ProgressBar from "@/components/ProgressBar";
 import AlbumInfo from "@/components/AlbumInfo";
-import PurchaseButton from "@/components/PurchaseButton";
+import InstallButton from "@/components/InstallButton";
 import ThankYouScreen from "@/components/ThankYouScreen";
 
 interface PlayerProps {
@@ -184,12 +184,7 @@ export default function Player({ album, tracks, razorpayKeyId }: PlayerProps) {
             <AlbumInfo album={album} tracks={tracks} />
           </div>
           <div className="mt-6">
-            <PurchaseButton
-              razorpayKeyId={razorpayKeyId}
-              albumTitle={album.title}
-              artist={album.artist}
-              onPurchased={() => setShowThankYou(true)}
-            />
+            <InstallButton />
           </div>
         </header>
 
@@ -270,16 +265,18 @@ function PauseIcon() {
 }
 
 function SkipIcon({ direction }: { direction: "prev" | "next" }) {
-  const flip = direction === "prev" ? "scale-x-[-1]" : "";
+  if (direction === "next") {
+    // ▶| — triangle leading (pointing right), stop-bar trailing on the right
+    return (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M6 5l9 7-9 7zM17 5h2v14h-2z" />
+      </svg>
+    );
+  }
+  // |◀ — stop-bar leading on the left, triangle trailing (pointing left)
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className={flip}
-    >
-      <path d="M6 5h2v14H6zM10 12l9-7v14z" />
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M5 5h2v14H5zM18 5l-9 7 9 7z" />
     </svg>
   );
 }
