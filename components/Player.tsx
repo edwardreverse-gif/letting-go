@@ -9,6 +9,7 @@ import ProgressBar from "@/components/ProgressBar";
 import AlbumInfo from "@/components/AlbumInfo";
 import InstallButton from "@/components/InstallButton";
 import ThankYouScreen from "@/components/ThankYouScreen";
+import SocialPanel from "@/components/SocialPanel";
 
 interface PlayerProps {
   album: AlbumInfoData;
@@ -23,6 +24,36 @@ export default function Player({ album, tracks, razorpayKeyId }: PlayerProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [showThankYou, setShowThankYou] = useState(false);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+
+  const SWIPE_THRESHOLD = 60;
+
+  function handleTouchStart(e: React.TouchEvent) {
+    const target = e.target as HTMLElement;
+    // Don't hijack swipes that start on interactive controls — the seek
+    // bar, buttons, and links all need their own touch handling intact.
+    if (target.closest("button, a, input")) {
+      touchStartRef.current = null;
+      return;
+    }
+    const touch = e.touches[0];
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    if (!start) return;
+
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - start.x;
+    const dy = touch.clientY - start.y;
+
+    if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      setIsPanelOpen(dx < 0);
+    }
+  }
 
   const activeTrack = tracks.find((t) => t.id === activeId) ?? tracks[0];
   const activeIndex = tracks.findIndex((t) => t.id === activeId);
@@ -152,7 +183,17 @@ export default function Player({ album, tracks, razorpayKeyId }: PlayerProps) {
   }, [currentTime, duration]);
 
   return (
-    <div className="md:grid md:h-screen md:grid-cols-2">
+    <div
+      className="md:grid md:h-screen md:grid-cols-2"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      <SocialPanel
+        isOpen={isPanelOpen}
+        onOpen={() => setIsPanelOpen(true)}
+        onClose={() => setIsPanelOpen(false)}
+      />
+
       {showThankYou && (
         <ThankYouScreen
           tracks={tracks}
