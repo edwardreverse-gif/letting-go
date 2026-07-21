@@ -51,7 +51,8 @@ export default function InstallButton() {
   if (isIOS) {
     return (
       <p className="max-w-xs font-label text-[11px] leading-relaxed text-gold-dim">
-        To install: tap <span className="text-gold">Share</span>, then{" "}
+        To install: tap <span className="text-gold">•••</span>, then{" "}
+        <span className="text-gold">Share</span>, then{" "}
         <span className="text-gold">“Add to Home Screen.”</span>
       </p>
     );
